@@ -150,3 +150,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+@utility backdrop-blur-lg {
+  backdrop-filter: blur(16px);
+}
