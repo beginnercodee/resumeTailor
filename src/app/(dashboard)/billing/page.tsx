@@ -1,54 +1,32 @@
 'use client'
-
-import { motion } from 'framer-motion'
-import { Check } from 'lucide-react'
-
-const plans = [
-  {
-    name: 'Free',
-    price: '$0',
-    features: ['3 resumes / month', 'Basic AI tailoring', 'PDF export'],
-  },
-  {
-    name: 'Pro',
-    price: '$9.99',
-    features: [
-      'Unlimited resumes',
-      'Detailed feedback',
-      'Priority support',
-      'Export to multiple formats',
-    ],
-  },
-]
+import { useState } from 'react'
 
 export default function BillingPage() {
+  const [loading, setLoading] = useState(false)
+
+  const handleUpgrade = async () => {
+    setLoading(true)
+    const res = await fetch('/api/stripe/create-checkout-session', {
+      method: 'POST',
+    })
+    const { sessionId } = await res.json()
+    const { loadStripe } = await import('@stripe/stripe-js')
+    const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
+    await stripe?.redirectToCheckout({ sessionId })
+  }
+
   return (
     <main className="glass min-h-screen p-8">
       <h1 className="text-4xl font-bold text-center mb-8">Choose Your Plan</h1>
       <div className="grid gap-6 md:grid-cols-2 max-w-4xl mx-auto">
-        {plans.map((plan, i) => (
-          <motion.div
-            key={plan.name}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1 }}
-            className={`glass rounded-xl p-6 ${plan.name === 'Pro' ? 'border-primary' : ''}`}
-          >
-            <h2 className="text-2xl font-bold mb-2">{plan.name}</h2>
-            <p className="text-3xl font-extrabold mb-4">{plan.price}</p>
-            <ul className="space-y-2 mb-6">
-              {plan.features.map((f) => (
-                <li key={f} className="flex items-center">
-                  <Check className="h-4 w-4 text-primary mr-2" />
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <button className="w-full gradient-border">
-              {plan.name === 'Free' ? 'Current Plan' : 'Upgrade to Pro'}
-            </button>
-          </motion.div>
-        ))}
+        {/* … pricing cards … */}
+        <button
+          onClick={handleUpgrade}
+          disabled={loading}
+          className="w-full gradient-border"
+        >
+          {loading ? 'Redirecting…' : 'Upgrade to Pro'}
+        </button>
       </div>
     </main>
   )
