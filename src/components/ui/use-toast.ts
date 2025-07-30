@@ -1,4 +1,2 @@
-export const toast = ({ title, description, variant = 'default' }: any) => {
-  // fallback: alert
+export const toast = ({ title, description }: { title: string; description: string }) =>
   alert(`${title}\n${description}`)
-}

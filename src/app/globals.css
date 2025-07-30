@@ -154,3 +154,7 @@
 @utility backdrop-blur-lg {
   backdrop-filter: blur(16px);
 }
+
+@utility bg-background-glass {
+  background-color: oklch(0.21 0.006 285.885 / 0.5);
+}

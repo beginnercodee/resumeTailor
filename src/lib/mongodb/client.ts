@@ -3,7 +3,7 @@ import { MongoClient } from 'mongodb';
 const uri = process.env.MONGODB_URI!;
 const client = new MongoClient(uri);
 
-export async function saveResume(userId: string, payload: any) {
+export async function saveResume(userId: string, payload: object) {
   await client.connect();
   const db = client.db(process.env.MONGODB_DB_NAME);
   const res = await db

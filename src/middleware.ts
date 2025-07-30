@@ -1,8 +1,11 @@
+// middleware.ts
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
+
+  const cookieStore = request.cookies;          // <-- grab the cookie store
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -10,25 +13,25 @@ export async function middleware(request: NextRequest) {
     {
       cookies: {
         getAll() {
-          return request.cookies.getAll();
+          return cookieStore.getAll();
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            request.cookies.set(name, value)
-          );
-          response = NextResponse.next({ request });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
-          );
-        },
+  cookiesToSet.forEach(({ name, value }) =>
+    cookieStore.set(name, value)
+  );
+  response = NextResponse.next({ request });
+  cookiesToSet.forEach(({ name, value, options }) =>
+    response.cookies.set(name, value, options)
+  );
+}
       },
     }
   );
 
-  // Example: redirect unauthenticated
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
   if (
     !user &&
     !request.nextUrl.pathname.startsWith('/login') &&
