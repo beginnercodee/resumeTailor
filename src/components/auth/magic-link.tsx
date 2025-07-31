@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast } from '@/components/ui/use-toast'
 import { createBrowserClient } from '@supabase/ssr'
+import { Mail } from 'lucide-react'
 
 export function MagicLinkForm() {
   const [email, setEmail] = useState('')
@@ -55,8 +56,9 @@ export function MagicLinkForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="glass"
+              className="glass pl-10"
             />
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Button type="submit" disabled={loading} className="w-full">
               {loading ? 'Sending...' : 'Send magic link'}
             </Button>

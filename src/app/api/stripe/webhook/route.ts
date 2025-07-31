@@ -20,13 +20,11 @@ export async function POST(req: NextRequest) {
 
   switch (event.type) {
     case 'checkout.session.completed':
-      // user upgraded – update DB & trigger welcome email
+      // TODO: update user plan
       break
     case 'invoice.payment_failed':
-      // payment failed – trigger recovery email
+      // TODO: recovery email
       break
-    default:
-      console.log(`Unhandled event ${event.type}`)
   }
 
   return NextResponse.json({ received: true })
